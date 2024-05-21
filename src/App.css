@@ -144,6 +144,10 @@ body {
     gap: 13px;
     margin-top: 20px;
   }
+ .checkbox{
+  margin-left: 20px;
+  margin-top: 4px;
+ }
   .condition {
     background-color: rgb(0, 17, 128);
     color: white;
