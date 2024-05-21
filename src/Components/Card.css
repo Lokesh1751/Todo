@@ -72,4 +72,8 @@
     .title{
       font-size: 14px;
     }
+    .checkbox{
+      margin-left: 20px;
+      margin-top: 4px;
+     }
   }
