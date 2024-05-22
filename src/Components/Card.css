@@ -10,7 +10,7 @@
     margin: 10px;
     cursor: pointer;
     padding: 7px;
-    background-color: red;
+    background-color: green;
     border-radius: 50%;
     color: white;
     border-radius: 10px;
@@ -78,6 +78,6 @@
      }
      .bin{
       padding: 4px;
-      
+
      }
   }
