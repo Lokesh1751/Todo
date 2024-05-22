@@ -1,155 +1,66 @@
-import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Card from "./Components/Card";
+import { TodoContext } from "./TodosReducer";
+import Header from "./Components/Header";
+import InputSection from "./Components/InputSection";
+import Buttons from "./Components/Buttons";
+import LoadingTasks from "./Components/LoadingTasks";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [value, setValue] = useState("");
-
+  const{state,dispatch}=useContext(TodoContext)
   useEffect(() => {
-    const storedTasks = JSON.parse(localStorage.getItem("tasks"));
-    const storedCompletedTasks = JSON.parse(
-      localStorage.getItem("completedTasks")
-    );
+    try {
+      const storedTasks = JSON.parse(localStorage.getItem("tasks"));
+      const storedCompletedTasks = JSON.parse(
+        localStorage.getItem("completedTasks")
+      );
 
-    if (storedTasks && storedCompletedTasks) {
-      setTasks(storedTasks);
-      setCompletedTasks(storedCompletedTasks);
-      setLoading(false);
-    } else {
-      fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((response) => response.json())
-        .then((data) => {
+      if (storedTasks || storedCompletedTasks) {
+        dispatch({ type: "SET_TASK", payload: storedTasks });
+        dispatch({ type: "SET_LOADING", payload: false });
+      } else {
+        fetchTasks();
+      }
+    } catch (error) {
+      console.error("Error retrieving data from localStorage:", error);
+      fetchTasks();
+    }
+  }, []);
+
+  const fetchTasks = () => {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setTimeout(() => {
           const initialTasks = data.slice(0, 10).map((task) => ({
             ...task,
             completed: false,
           }));
-          setTasks(initialTasks);
-          setLoading(false);
-          localStorage.setItem("tasks", JSON.stringify(initialTasks));
-          localStorage.setItem("completedTasks", JSON.stringify([]));
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setLoading(false);
+          dispatch({ type: "SET_TASK", payload: initialTasks });
+          localStorage.setItem("tasks", JSON.stringify(initialTasks)); // Update local storage here
+          dispatch({ type: "SET_LOADING", payload: false });
         });
-    }
-  }, []);
-
-  const handleAddTask = () => {
-    if (value === "") {
-      alert("Please Enter Something!!");
-    } else {
-      if (value.trim()) {
-        const newTask = {
-          id: tasks.length + 1,
-          title: value,
-          completed: false,
-        };
-        setTasks([...tasks, newTask]);
-        setValue("");
-        toast.success("Added Successfully!", {
-          autoClose: 2000,
-        });
-        localStorage.setItem("tasks", JSON.stringify([...tasks, newTask]));
-      }
-    }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+        dispatch({ type: "SET_LOADING", payload: false });
+      });
   };
-
-  const handleRemoveTask = (id) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    const updatedCompletedTasks = completedTasks.filter(
-      (task) => task.id !== id
-    );
-    setTasks(updatedTasks);
-    setCompletedTasks(updatedCompletedTasks);
-    toast.error("Deleted Successfully!", {
-      autoClose: 2000,
-    });
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    localStorage.setItem(
-      "completedTasks",
-      JSON.stringify(updatedCompletedTasks)
-    );
-  };
-
-  const handleToggleComplete = (id) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
-    const taskToMove = updatedTasks.find((task) => task.id === id);
-    if (taskToMove.completed) {
-      setCompletedTasks([...completedTasks, taskToMove]);
-    } else {
-      setCompletedTasks(completedTasks.filter((task) => task.id !== id));
-    }
-    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
-  };
-
-  const handleKeyPress= (event)=>{
-    if(event.key==="Enter"){
-      event.preventDefault();
-      handleAddTask();
-    }
-  }
 
   return (
     <div className="container">
-      <div className="innercontainer">
-        <h1 className="heading">TODO LIST</h1>
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/6194/6194029.png"
-          alt=""
-          className="img"
-        />
-      </div>
-
-      <div className="inputsection">
-        <input
-          type="text"
-          className="input"
-          placeholder="Add your task 🖊️"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyPress}
-        />
-        <button className="btn" onClick={handleAddTask}>
-          +
-        </button>
-      </div>
-      <div className="buttons">
-        <button className="condition">All {tasks.length}</button>
-        <button className="condition">
-          Pending {tasks.length - completedTasks.length}
-        </button>
-        <button className="condition">Completed {completedTasks.length}</button>
-        <button className="condition" onClick={() => setTasks([])}>
-          Clear All
-        </button>
-      </div>
-
-      {loading ? (
-        <p className="loading">Loading tasks...</p>
-      ) : (
-        <ul>
-          {tasks.map((task) => (
-            <Card
-              key={task.id}
-              id={task.id}
-              title={task.title}
-              completed={task.completed}
-              onRemove={handleRemoveTask}
-              onToggleComplete={handleToggleComplete}
-            />
-          ))}
-        </ul>
-      )}
+      <Header />
+      <InputSection  />
+      <Buttons />
+      <LoadingTasks  />
       <ToastContainer />
     </div>
   );
