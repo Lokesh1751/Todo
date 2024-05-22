@@ -135,7 +135,7 @@ body {
     width: 360px;
   }
   .input {
-    width: 150px;
+    width: 180px;
   }
   .buttons {
     display: flex;
@@ -162,7 +162,7 @@ body {
     font-size: 25px;
   }
   .btn {
-    width: 44px;
+    width: 54px;
     font-size: 40px;
   }
 }
