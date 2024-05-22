@@ -8,7 +8,7 @@ const LoadingTasks = () => {
 
   const handleRemoveTask = (id) => {
     dispatch({ type: "REMOVE_TASK", payload: id });
-    toast.error("Task deleted successfully", { autoClose: 1000 });
+    toast.error("Task deleted successfully", { autoClose: 1000 }); // Show toast notification when task is removed
   };
 
   const handleToggleComplete = (id) => {
