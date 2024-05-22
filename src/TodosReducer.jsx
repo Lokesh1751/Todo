@@ -9,8 +9,6 @@ export function reducer(state, action) {
   switch (action.type) {
     case "SET_TASK":
       return { ...state, tasks: action.payload };
-    case "SET_COMPLETE_VALUE":
-      return { ...state, completedTasks: action.payload };
     case "SET_VALUE":
       return { ...state, value: action.payload };
     case "SET_LOADING":
