@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from "react";
+
 export const initialState = {
   tasks: [],
   value: "",
@@ -19,6 +20,7 @@ export function reducer(state, action) {
       const updatedTasks = state.tasks.filter(
         (task, index) => index !== action.payload
       );
+
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
       return { ...state, tasks: updatedTasks };
     case "TOGGLE_COMPLETE":

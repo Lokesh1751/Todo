@@ -1,13 +1,11 @@
-import React,{useContext} from 'react';
-import { TodoContext } from "../TodosReducer";
-
-
+import React, { useContext } from "react";
+import { TodoContext } from "../Reducer/TodosReducer";
 
 const Buttons = () => {
-    const{state,dispatch}=useContext(TodoContext)
+  const { state, dispatch } = useContext(TodoContext);
   const handleClearAll = () => {
-    dispatch({ type: 'REMOVE_TASKS' });
-    localStorage.removeItem("tasks")
+    dispatch({ type: "REMOVE_TASKS" });
+    localStorage.removeItem("tasks");
   };
 
   return (

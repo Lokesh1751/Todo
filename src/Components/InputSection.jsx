@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
-import { TodoContext } from "../TodosReducer";
+import { TodoContext } from "../Reducer/TodosReducer";
+import { toast } from "react-toastify";
 
 const InputSection = () => {
   const { state, dispatch } = useContext(TodoContext);
+
   const handleAddTask = () => {
     if (state.value === "") {
       alert("Please Enter Something!!");
@@ -12,10 +14,12 @@ const InputSection = () => {
         title: state.value,
         completed: false,
       };
+
       const newTasks = [...state.tasks, tsk];
       localStorage.setItem("tasks", JSON.stringify(newTasks));
       dispatch({ type: "ADD_TASK", payload: newTasks });
       dispatch({ type: "SET_VALUE", payload: "" });
+      toast.success("Task added successfully", { autoClose: 1000 });
     }
   };
 

@@ -1,5 +1,4 @@
 import React from "react";
-import "./Card.css";
 
 const Card = ({ id, title, completed, onRemove, onToggleComplete }) => {
   return (

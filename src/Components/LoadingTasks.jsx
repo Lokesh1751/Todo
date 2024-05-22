@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { TodoContext } from "../TodosReducer";
+import { TodoContext } from "../Reducer/TodosReducer";
+import { toast } from "react-toastify";
 import Card from "./Card";
 
 const LoadingTasks = () => {
@@ -7,6 +8,7 @@ const LoadingTasks = () => {
 
   const handleRemoveTask = (id) => {
     dispatch({ type: "REMOVE_TASK", payload: id });
+    toast.error("Task deleted successfully", { autoClose: 1000 });
   };
 
   const handleToggleComplete = (id) => {
