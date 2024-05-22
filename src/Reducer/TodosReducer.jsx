@@ -15,7 +15,9 @@ export function reducer(state, action) {
     case "SET_LOADING":
       return { ...state, loading: action.payload };
     case "ADD_TASK":
-      return { ...state, tasks: action.payload, value: "" };
+      const newTasks = [...state.tasks, action.payload];
+      localStorage.setItem("tasks", JSON.stringify(newTasks));
+      return { ...state, tasks: newTasks, value: "" };
     case "REMOVE_TASK":
       const updatedTasks = state.tasks.filter(
         (task, index) => index !== action.payload

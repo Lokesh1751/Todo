@@ -10,14 +10,12 @@ const InputSection = () => {
       alert("Please Enter Something!!");
     } else {
       const tsk = {
-        id: state.tasks.length + 1,
         title: state.value,
         completed: false,
       };
 
-      const newTasks = [...state.tasks, tsk];
-      localStorage.setItem("tasks", JSON.stringify(newTasks));
-      dispatch({ type: "ADD_TASK", payload: newTasks });
+      
+      dispatch({ type: "ADD_TASK", payload: tsk });
       dispatch({ type: "SET_VALUE", payload: "" });
       toast.success("Task added successfully", { autoClose: 1000 });
     }
