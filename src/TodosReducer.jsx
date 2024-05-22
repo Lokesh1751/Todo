@@ -1,4 +1,4 @@
-import React,{createContext,useReducer} from 'react'
+import React, { createContext, useReducer } from "react";
 export const initialState = {
   tasks: [],
   value: "",
@@ -17,12 +17,12 @@ export function reducer(state, action) {
       return { ...state, tasks: action.payload, value: "" };
     case "REMOVE_TASK":
       const updatedTasks = state.tasks.filter(
-        (task,index) => index !== action.payload
+        (task, index) => index !== action.payload
       );
       localStorage.setItem("tasks", JSON.stringify(updatedTasks));
       return { ...state, tasks: updatedTasks };
     case "TOGGLE_COMPLETE":
-      const updatedTasksWithCompletion = state.tasks.map((task,index) =>
+      const updatedTasksWithCompletion = state.tasks.map((task, index) =>
         index === action.payload
           ? { ...task, completed: !task.completed }
           : task
@@ -37,17 +37,14 @@ export function reducer(state, action) {
   }
 }
 
-export const TodoContext=createContext();
-const TodosReducer = ({children}) => {
+export const TodoContext = createContext();
+const TodosReducer = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
-   <TodoContext.Provider value={{state,dispatch}}>
-{children}
-   </TodoContext.Provider>
-  )
-}
+    <TodoContext.Provider value={{ state, dispatch }}>
+      {children}
+    </TodoContext.Provider>
+  );
+};
 
-export default TodosReducer
-
-
-
+export default TodosReducer;
